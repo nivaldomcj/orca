@@ -10046,7 +10046,10 @@
             "command": "명령",
             "confirm": "확인",
             "close": "닫다",
-            "omp": "OMP"
+            "omp": "OMP",
+            "editorFontSize": "편집기 글꼴 크기",
+            "editorFontSizeDesc": "파일 편집기 및 diff 보기에서 사용되는 글꼴 크기입니다. 비워두면 터미널 글꼴 크기를 따릅니다.",
+            "editorFontSizeKw": "텍스트 크기"
           }
         },
         "git": {
@@ -12709,6 +12712,11 @@
         },
         "useUsageHostSettings": {
           "updateFailed": "{{host}}의 설정을 업데이트하지 못했습니다."
+        },
+        "EditorFontSizeSetting": {
+          "title": "편집기 글꼴 크기",
+          "description": "파일 편집기 및 diff 보기에서 사용되는 글꼴 크기입니다. 비워두면 터미널 글꼴 크기를 따릅니다.",
+          "px": "px"
         }
       },
       "right": {

@@ -10056,7 +10056,10 @@
             "running_terminal": "correr",
             "command": "dominio",
             "confirm": "confirmar",
-            "omp": "OMP"
+            "omp": "OMP",
+            "editorFontSize": "Tamaño de fuente del editor",
+            "editorFontSizeDesc": "Tamaño de fuente utilizado por los editores de archivos y vistas de diferencias. Dejar vacío para seguir el tamaño de fuente de la terminal.",
+            "editorFontSizeKw": "tamaño de texto"
           }
         },
         "git": {
@@ -12704,6 +12707,11 @@
         },
         "useUsageHostSettings": {
           "updateFailed": "No se pudo actualizar el ajuste en {{host}}."
+        },
+        "EditorFontSizeSetting": {
+          "title": "Tamaño de fuente del editor",
+          "description": "Tamaño de fuente utilizado por los editores de archivos y vistas de diferencias. Dejar vacío para seguir el tamaño de fuente de la terminal.",
+          "px": "px"
         }
       },
       "right": {

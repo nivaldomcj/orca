@@ -10211,7 +10211,10 @@
             "command": "commande",
             "confirm": "confirmer",
             "close": "fermer",
-            "omp": "OMP"
+            "omp": "OMP",
+            "editorFontSize": "Taille de police de l'éditeur",
+            "editorFontSizeDesc": "Taille de police utilisée par les éditeurs de fichiers et les vues de diff. Laissez vide pour suivre la taille de police du terminal.",
+            "editorFontSizeKw": "taille du texte"
           }
         },
         "git": {
@@ -12817,6 +12820,11 @@
         },
         "useUsageHostSettings": {
           "updateFailed": "Impossible de mettre à jour le réglage sur {{host}}."
+        },
+        "EditorFontSizeSetting": {
+          "title": "Taille de police de l'éditeur",
+          "description": "Taille de police utilisée par les éditeurs de fichiers et les vues de diff. Laissez vide pour suivre la taille de police du terminal.",
+          "px": "px"
         }
       },
       "right": {
