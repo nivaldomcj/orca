@@ -13013,8 +13013,6 @@
           "updateFailed": "Could not update the setting on {{host}}."
         },
         "EditorFontSizeSetting": {
-          "title": "Editor Font Size",
-          "description": "Font size used by file editors and diff views. Leave empty to follow the terminal font size.",
           "px": "px"
         }
       },
