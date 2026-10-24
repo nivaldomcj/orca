@@ -1,4 +1,5 @@
 import { buildWebSessionExistingTabIndex } from '../web-session-existing-tab-index'
+import { resolveWebSessionVisibleTabId } from '../web-session-focus-intent'
 import { chooseTargetGroupId, buildHostGroupIdByTabId } from './tab-group-layout-tree'
 import {
   buildMirroredBrowserTabs,
@@ -13,7 +14,6 @@ import {
 } from '../host-session-snapshot-authority'
 import type { prepareWebSessionTabsSnapshotBase } from './apply-preparation-base'
 import type { OpenFile } from '../../store/slices/editor'
-import { createEditorBuffers } from '../../store/slices/editor/buffers/editor-buffer-record'
 import {
   advanceWebSessionOpenFilesIndex,
   sameOpenFiles,
@@ -21,6 +21,7 @@ import {
 } from './state-equality-files'
 import { shouldRetainStructuredAgentSessionLaunchTab } from '@/lib/structured-agent-session-launch-registry'
 import { executionHostIdForSessionTabsOwner } from '../local-structured-session-owner'
+import { isUnlistedCreatedChat } from '@/lib/structured-agent-session-unlisted-created-chats'
 
 export function prepareWebSessionTabsSnapshotBrowser(
   base: ReturnType<typeof prepareWebSessionTabsSnapshotBase>
@@ -35,7 +36,8 @@ export function prepareWebSessionTabsSnapshotBrowser(
     mirroredTerminalIds,
     removedTerminalIds,
     reconcilesNonAgentTabs,
-    batchContext
+    batchContext,
+    navigationIntentTab
   } = base
   const targetGroupId = chooseTargetGroupId(state, snapshot)
   const hostGroupIdByTabId = buildHostGroupIdByTabId(snapshot.tabGroups)
@@ -123,7 +125,8 @@ export function prepareWebSessionTabsSnapshotBrowser(
     targetGroupId,
     mirroredTerminalTabEntries.length + mirroredBrowserTabs.length,
     now,
-    (fileId) => state.editorDrafts?.[fileId] !== undefined
+    (fileId) => state.editorDrafts?.[fileId] !== undefined,
+    navigationIntentTab?.id ?? resolveWebSessionVisibleTabId(state, worktreeId)
   )
   const mirroredAgentTabs = buildMirroredAgentTabs(
     snapshot,
@@ -178,11 +181,6 @@ export function prepareWebSessionTabsSnapshotBrowser(
     return sameOpenFiles(state.openFiles, next) ? state.openFiles : next
   })()
   advanceWebSessionOpenFilesIndex(batchContext, nextOpenFiles, worktreeId)
-  // Why: a mirrored tab's buffer state is the host's, so its record is (re)created with the tab.
-  const nextEditorBuffers =
-    nextOpenFiles === state.openFiles
-      ? state.editorBuffers
-      : createEditorBuffers(state.editorBuffers ?? {}, mirroredOpenFiles)
   const retainedUnifiedTabs = currentUnifiedTabs.filter((tab) => {
     if (tab.contentType === 'agent-session') {
       // A matching host row is authoritative; retaining the provisional tab beside its mirror
@@ -191,7 +189,8 @@ export function prepareWebSessionTabsSnapshotBrowser(
       return (
         !publishedAgentSessionIds.has(tab.entityId) &&
         (!agentSessionsAffirmed ||
-          shouldRetainStructuredAgentSessionLaunchTab(worktreeId, tab.entityId))
+          shouldRetainStructuredAgentSessionLaunchTab(worktreeId, tab.entityId) ||
+          isUnlistedCreatedChat(worktreeId, tab.entityId))
       )
     }
     if (tab.contentType === 'browser') {
@@ -243,7 +242,6 @@ export function prepareWebSessionTabsSnapshotBrowser(
     removedEditorFileIds,
     nextWorktreeOpenFileIds,
     nextOpenFiles,
-    nextEditorBuffers,
     retainedUnifiedTabs,
     existingViewModeByTabId
   }

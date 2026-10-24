@@ -1,8 +1,9 @@
 import {
   closeTestStores,
-  testState,
   createStore,
-  makeTerminalTab
+  makeTerminalTab,
+  registerWorkspaceRepos,
+  testState
 } from './persistence-test-harness'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { rmSync, mkdtempSync } from 'node:fs'
@@ -14,7 +15,6 @@ import { TEST_LEAF_1, TEST_LEAF_2 } from './persistence-session-fixtures'
 import { hostWorktreeTarget } from '../shared/worktree/host-qualified-identity'
 import { removeWorktreeMetaRow } from './persistence/host-qualified-worktree-meta'
 
-// Stub the ~/.ssh/config parser so the SSH-import test drives the real Store with deterministic hosts, not the operator's actual ~/.ssh/config.
 const { loadUserSshConfigMock, sshConfigHostsToTargetsMock } = vi.hoisted(() => ({
   loadUserSshConfigMock: vi.fn(),
   sshConfigHostsToTargetsMock: vi.fn()
@@ -68,6 +68,7 @@ describe('Store', () => {
   })
   it('adds a missing split leaf to the durable root when a new pane spawns before layout debounce', async () => {
     const store = await createStore()
+    registerWorkspaceRepos(store, 'wt1')
     store.setWorkspaceSession({
       activeRepoId: 'r1',
       activeWorktreeId: 'wt1',
